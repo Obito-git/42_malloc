@@ -5,23 +5,30 @@
 #ifndef MALLOC_ALLOCATOR_H
 #define MALLOC_ALLOCATOR_H
 #include <sys/mman.h>
+#include <sys/resource.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define TINY_ALLOC_SIZE 4 * getpagesize()
+#define TINY_BLOCK_MAX_SIZE TINY_ALLOC_SIZE / 128
 #define SMALL_ALLOC_SIZE 32 * getpagesize()
+#define SMALL_BLOCK_MAX_SIZE SMALL_ALLOC_SIZE / 128
 /*	Allocation macros */
-#define BLOCK_SIZE sizeof(block_header)
-#define HEADER_PTR(blockPayload) ((char *)(bp) - BLOCK_SIZE)
-#define GET_SIZE(blockHeader) ((block_header *) (p))->size
-#define IS_ALLOC(blockHeader) ((block_header *) (p))->allocated
+#define HEADER_SIZE sizeof(t_header)
+#define HEAP_HEADER_SIZE sizeof(t_heap)
+#define HEADER_PTR(blockPayload) ((char *)(bp) - HEADER_SIZE)
+#define GET_SIZE(blockHeader) ((t_block_header *) (p))->size
+#define IS_ALLOC(blockHeader) ((t_block_header *) (p))->allocated
 
 typedef enum s_group {
 	TINY, SMALL, LARGE
 } t_group;
 
 typedef struct s_heap {
-	size_t			total_size;
+	//DEBUG
+	size_t max_size;
+	//NORMAL
 	size_t 			free_size;
 	size_t			block_count;
 	t_group			group;
@@ -31,12 +38,28 @@ typedef struct s_heap {
 typedef struct block_header {
 	size_t	size;
 	bool	allocated;
-} block_header;
+} t_header;
 
-extern t_heap heap;
-extern void *memory;
+extern t_heap *g_heap;
 
-void allocate ();
+void *allocate(size_t size);
 void *malloc(size_t size);
+
+/*	Memory Groups */
+size_t getHeapSize(size_t size);
+t_group getHeapGroup(size_t size);
+t_group getBlockGroup(size_t size);
+
+/* Memory Block */
+void *allocateBlock(void *heap, size_t size);
+void initialiseNewHeap(void *memory, size_t heapSize);
+
+/* Heap */
+void *findRequiredHeap(size_t size);
+
+
+
+//libft
+char	*ft_strcpy(char *dest, const char *src);
 
 #endif //MALLOC_ALLOCATOR_H
