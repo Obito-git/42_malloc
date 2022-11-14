@@ -17,9 +17,6 @@
 /*	Allocation macros */
 #define HEADER_SIZE sizeof(t_header)
 #define HEAP_HEADER_SIZE sizeof(t_heap)
-#define HEADER_PTR(blockPayload) ((char *)(bp) - HEADER_SIZE)
-#define GET_SIZE(blockHeader) ((t_block_header *) (p))->size
-#define IS_ALLOC(blockHeader) ((t_block_header *) (p))->allocated
 
 typedef enum s_group {
 	TINY, SMALL, LARGE
@@ -52,7 +49,7 @@ t_group getBlockGroup(size_t size);
 
 /* Memory Block */
 void *allocateBlock(void *heap, size_t size);
-void initialiseNewHeap(void *memory, size_t heapSize);
+void initialiseNewHeap(void *memory, size_t blockSize);
 
 /* Heap */
 void *findRequiredHeap(size_t size);

@@ -3,18 +3,18 @@
 //
 #include "allocator.h"
 
-void initialiseNewHeap(void *memory, size_t heapSize) {
+void initialiseNewHeap(void *memory, size_t blockSize) {
 	if (!memory)
 		return;
 	t_heap *heap = (t_heap *) memory;
 	heap->block_count = 0;
-	heap->group = getHeapGroup(heapSize);
-	heap->free_size = heapSize - HEAP_HEADER_SIZE - HEADER_SIZE;
+	heap->group = getBlockGroup(blockSize);
+	heap->free_size = getHeapSize(blockSize) - HEAP_HEADER_SIZE - HEADER_SIZE;
 	t_header *firstBlock = (t_header *) (memory + HEAP_HEADER_SIZE);
 	firstBlock->size = heap->free_size;
 	firstBlock->allocated = false;
 	//FIXME DEBUG
-	heap->max_size = heapSize;
+	heap->max_size = heap->free_size + HEAP_HEADER_SIZE + HEADER_SIZE;
 }
 
 void *findRequiredHeap(size_t size) {
@@ -28,7 +28,7 @@ void *findRequiredHeap(size_t size) {
 	if (heaps->group == requiredGroup && heaps->free_size >= size + HEADER_SIZE)
 		return heaps;
 	t_heap *new = mmap(NULL, getHeapSize(size), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-	initialiseNewHeap(new, getHeapSize(size));
+	initialiseNewHeap(new, size);
 	heaps->next = new;
 	return new;
 }

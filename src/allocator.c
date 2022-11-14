@@ -21,7 +21,7 @@ void *allocate(size_t size) {
 	t_heap *correct_heap = NULL;
 	if (!g_heap) {
 		correct_heap = g_heap = mmap(NULL, getHeapSize(size), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-		initialiseNewHeap(g_heap, getHeapSize(size));
+		initialiseNewHeap(g_heap, size);
 	} else
 		correct_heap = findRequiredHeap(size);
 	return allocateBlock((void *) correct_heap, size);
