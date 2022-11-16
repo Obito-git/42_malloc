@@ -6,25 +6,20 @@
 void *allocateBlock(void *heap, size_t size) {
 	if (!heap)
 		return NULL;
-	t_heap *currentHeap = (t_heap *) heap;
-	t_header *currentHeader = heap + HEAP_HEADER_SIZE;
-	while (currentHeap->block_count) {
-		if (currentHeader->size >= size && !currentHeader->allocated)
+	void *currentHeader = FIRST_BLOCK(heap);
+	while (HEAP_BLOCKS_COUNT(heap)) {
+		if (ALLOC_SIZE(currentHeader) >= size && !IS_ALLOC(currentHeader))
 			break;
-		currentHeader = (t_header *) ((char *) currentHeader + HEADER_SIZE + currentHeader->size);
+		currentHeader = NEXT_HEADER(currentHeader);
 	}
-	if (currentHeap->group != LARGE) {
-		t_header *nextHeader = (t_header *) ((char *) currentHeader + HEADER_SIZE + size);
-		//printf("new block (%p) on %lu, next (%p) on %lu\n", currentHeader + HEADER_SIZE,
-		//	   (char *) currentHeader - (char *) heap, nextHeader + HEADER_SIZE, (char *) nextHeader - (char *) heap);
-		nextHeader->allocated = false;
-		nextHeader->size = currentHeader->size - size - HEADER_SIZE;
+	if (HEAP_GROUP(heap) != LARGE) {
+		void *nextHeader = NEXT_HEADER(currentHeader);
+		IS_ALLOC(nextHeader) = false;
+		ALLOC_SIZE(nextHeader) = ALLOC_SIZE(currentHeader) - size - HEADER_SIZE;
 	}
-	currentHeader->size = size;
-	currentHeader->allocated = true;
-	currentHeap->free_size -= size + (currentHeap->group == LARGE ? 0 : (HEADER_SIZE));
-	currentHeap->block_count++;
-	//printf("Heap free: %lu, occupied %lu, total %lu\n", currentHeap->free_size, ((char *)nextHeader + BLOCK_SIZE) - (char *)heap,
-	//	   currentHeap->free_size + ((char *)nextHeader + BLOCK_SIZE) - (char *)heap);
-	return (void *) (currentHeader + HEADER_SIZE);
+	ALLOC_SIZE(currentHeader) = size;
+	IS_ALLOC(currentHeader) = true;
+	HEAP_FREE_SIZE(heap) -= size + (HEAP_GROUP(heap) == LARGE ? 0 : (HEADER_SIZE));
+	HEAP_BLOCKS_COUNT(heap)++;
+	return (void *) ((char *) currentHeader + HEADER_SIZE);
 }

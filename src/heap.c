@@ -10,11 +10,11 @@ void initialiseNewHeap(void *memory, size_t blockSize) {
 	heap->block_count = 0;
 	heap->group = getBlockGroup(blockSize);
 	heap->free_size = getHeapSize(blockSize) - HEAP_HEADER_SIZE - HEADER_SIZE;
-	t_header *firstBlock = (t_header *) (memory + HEAP_HEADER_SIZE);
+	t_header *firstBlock = FIRST_BLOCK(memory);
 	firstBlock->size = heap->free_size;
 	firstBlock->allocated = false;
-	//FIXME DEBUG
-	heap->max_size = heap->free_size + HEAP_HEADER_SIZE + HEADER_SIZE;
+	heap->end = memory + getHeapSize(blockSize) - 1;
+	printf("%p last\n", heap->end);
 }
 
 void *findRequiredHeap(size_t size) {

@@ -26,3 +26,8 @@ void *allocate(size_t size) {
 		correct_heap = findRequiredHeap(size);
 	return allocateBlock((void *) correct_heap, size);
 }
+
+void deallocate(void *ptr) {
+
+	(void ) ptr;
+}

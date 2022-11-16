@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "../minilib_ft/includes/libft.h"
 
 #define TINY_ALLOC_SIZE 4 * getpagesize()
 #define TINY_BLOCK_MAX_SIZE TINY_ALLOC_SIZE / 128
@@ -17,6 +18,16 @@
 /*	Allocation macros */
 #define HEADER_SIZE sizeof(t_header)
 #define HEAP_HEADER_SIZE sizeof(t_heap)
+/* Heap macros */
+#define HEAP_GROUP(mem) (((t_heap *) mem)->group)
+#define HEAP_BLOCKS_COUNT(mem) (((t_heap *) mem)->block_count)
+#define HEAP_FREE_SIZE(mem) (((t_heap *) mem)->free_size)
+/* Memory block macros */
+#define IS_ALLOC(mem) (((t_header *) mem)->allocated)
+#define ALLOC_SIZE(mem) (((t_header *) mem)->size)
+#define NEXT_HEADER(mem) (((char *) mem) + HEADER_SIZE + ALLOC_SIZE(mem))
+#define FIRST_BLOCK(mem) (t_header *) (mem + HEAP_HEADER_SIZE);
+
 
 typedef enum s_group {
 	TINY, SMALL, LARGE
@@ -29,6 +40,7 @@ typedef struct s_heap {
 	size_t 			free_size;
 	size_t			block_count;
 	t_group			group;
+	void			*end;
 	struct s_heap		*next;
 } t_heap;
 
@@ -53,6 +65,9 @@ void initialiseNewHeap(void *memory, size_t blockSize);
 
 /* Heap */
 void *findRequiredHeap(size_t size);
+
+/* Print */
+void show_alloc_mem();
 
 
 
