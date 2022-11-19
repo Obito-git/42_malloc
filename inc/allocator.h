@@ -22,21 +22,23 @@
 #define HEAP_GROUP(mem) (((t_heap *) mem)->group)
 #define HEAP_BLOCKS_COUNT(mem) (((t_heap *) mem)->block_count)
 #define HEAP_FREE_SIZE(mem) (((t_heap *) mem)->free_size)
+#define HEAP_NEXT(mem) (((t_heap *) mem)->next)
+#define HEAP_END(mem) (((t_heap *) mem)->end)
 /* Memory block macros */
 #define IS_ALLOC(mem) (((t_header *) mem)->allocated)
 #define ALLOC_SIZE(mem) (((t_header *) mem)->size)
-#define NEXT_HEADER(mem) (((char *) mem) + HEADER_SIZE + ALLOC_SIZE(mem))
+#define BLOCK_CONTENT(mem) (mem + HEADER_SIZE)
+#define NEXT_HEADER(mem) ((void *) (((char *) mem) + HEADER_SIZE + ALLOC_SIZE(mem)))
 #define FIRST_BLOCK(mem) (t_header *) (mem + HEAP_HEADER_SIZE);
 
+#define MEM_ADDRESS(mem) ((unsigned long) ((char *) mem))
+#define HEX_BASE "0123456789abcdef"
 
 typedef enum s_group {
 	TINY, SMALL, LARGE
 } t_group;
 
 typedef struct s_heap {
-	//DEBUG
-	size_t max_size;
-	//NORMAL
 	size_t 			free_size;
 	size_t			block_count;
 	t_group			group;
@@ -52,6 +54,8 @@ typedef struct block_header {
 extern t_heap *g_heap;
 
 void *allocate(size_t size);
+void deallocateBlock(void *ptr);
+void free(void *ptr);
 void *malloc(size_t size);
 
 /*	Memory Groups */
@@ -64,7 +68,9 @@ void *allocateBlock(void *heap, size_t size);
 void initialiseNewHeap(void *memory, size_t blockSize);
 
 /* Heap */
-void *findRequiredHeap(size_t size);
+void *findAllocationRequiredHeap(size_t size);
+void *findDeallocationRequiredHeap(void *ptr);
+void deallocateHeap(void *heap);
 
 /* Print */
 void show_alloc_mem();

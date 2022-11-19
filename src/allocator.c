@@ -23,11 +23,22 @@ void *allocate(size_t size) {
 		correct_heap = g_heap = mmap(NULL, getHeapSize(size), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
 		initialiseNewHeap(g_heap, size);
 	} else
-		correct_heap = findRequiredHeap(size);
+		correct_heap = findAllocationRequiredHeap(size);
 	return allocateBlock((void *) correct_heap, size);
 }
 
-void deallocate(void *ptr) {
-
-	(void ) ptr;
+void deallocateHeap(void *heap) {
+	void *tmp = g_heap;
+	t_heap *h = (t_heap*) heap;
+	(void ) h;
+	if (heap == g_heap) {
+		g_heap = g_heap->next;	
+	} else {
+		while (tmp && HEAP_NEXT(tmp) != heap)
+			tmp = HEAP_NEXT(tmp);
+		if (!tmp || !heap)
+			return;
+		HEAP_NEXT(tmp) = HEAP_NEXT(heap);
+	}
+	munmap(heap, HEAP_FREE_SIZE(heap) + HEADER_SIZE + HEAP_HEADER_SIZE);
 }

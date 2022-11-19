@@ -12,5 +12,5 @@ void *malloc(size_t size) {
 void free(void *ptr) {
 	if (!ptr)
 		return;
-	
+	deallocateBlock(ptr);
 }
