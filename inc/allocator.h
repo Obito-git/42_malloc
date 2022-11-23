@@ -57,6 +57,7 @@ void *allocate(size_t size);
 void deallocateBlock(void *ptr);
 void free(void *ptr);
 void *malloc(size_t size);
+void *realloc(void *ptr, size_t size);
 
 /*	Memory Groups */
 size_t getHeapSize(size_t size);
@@ -66,6 +67,7 @@ t_group getBlockGroup(size_t size);
 /* Memory Block */
 void *allocateBlock(void *heap, size_t size);
 void initialiseNewHeap(void *memory, size_t blockSize);
+void *reallocBlock(void *ptr, void *heap, size_t newSize);
 
 /* Heap */
 void *findAllocationRequiredHeap(size_t size);

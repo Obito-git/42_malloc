@@ -29,8 +29,6 @@ void *allocate(size_t size) {
 
 void deallocateHeap(void *heap) {
 	void *tmp = g_heap;
-	t_heap *h = (t_heap*) heap;
-	(void ) h;
 	if (heap == g_heap) {
 		g_heap = g_heap->next;	
 	} else {

@@ -39,6 +39,8 @@ void *findAllocationRequiredHeap(size_t size) {
 }
 
 void *findDeallocationRequiredHeap(void *ptr) {
+	if (!ptr)
+		return NULL;
 	void *tmp_glob = g_heap;
 	while (tmp_glob) {
 		if (ptr > tmp_glob && ptr < HEAP_END(tmp_glob))
