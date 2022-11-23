@@ -23,6 +23,7 @@ void *allocateBlock(void *heap, size_t size) {
 	return (void *) ((char *) currentHeader + HEADER_SIZE);
 }
 
+/*	Tries to extend current block with next when realloc */
 static bool tryToExtendBlock(void *ptrHeader, void *nextHeader, size_t newSize) {
 	if (ALLOC_SIZE(ptrHeader) > newSize) {
 		size_t oldSize = ALLOC_SIZE(ptrHeader);
@@ -74,6 +75,7 @@ static void mergeFreedBlocks(void *prev, void *curr, void *heap) {
 		deallocateHeap(heap);
 }
 
+/*	Finds @ptr in @g_heap for set @heap, @prevBlock, @currBlock variables before free */
 static void setDeallocBlocks(void *ptr, void **heap, void **prevBlock, void **currBlock) {
 	*heap = findDeallocationRequiredHeap(ptr);
 	if (*heap)
