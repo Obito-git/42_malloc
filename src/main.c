@@ -1,15 +1,5 @@
 #include "allocator.h"
 
-/*
- *	void free(void *ptr);
- *	
- *	void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset);
- *	int munmap(void *addr, size_t len);
- *	int getpagesize(void);
- *	int getrlimit(int resource, struct rlimit *rlp);
- */
-
-#include <stdio.h>
 int main() {
 	char *s1 = malloc(100);
 	char *s2 = malloc(100);

@@ -1,10 +1,11 @@
 NAME = a.out
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -g3 -Iinc -Iminilib_ft/includes
+CFLAGS = -Wall -Werror -Wextra -g3 -Iinc
 SRCS_DIR = src/
-SRCS = main.c allocator.c malloc.c memoryGroups.c heap.c memoryBlock.c print.c
-LIBFT_PATH = minilib_ft/
-LIBFT_NAME = libft.a
+UTILS_DIR = minilib_ft/
+SRCS = main.c allocator.c malloc.c memoryGroups.c heap.c memoryBlock.c print.c \
+	$(UTILS_DIR)ft_putchar.c $(UTILS_DIR)ft_putstr.c $(UTILS_DIR)ft_putendl.c $(UTILS_DIR)ft_putunsigned_base.c $(UTILS_DIR)ft_memcpy.c \
+	$(UTILS_DIR)ft_putunsigned.c $(UTILS_DIR)ft_strlen.c
 OBJ/OBJECTS		=	$(patsubst $(SRCS_DIR)%.c, obj/%.o, $(SRCS))
 SRCS	:= $(foreach file,$(SRCS),$(SRCS_DIR)$(file))
 
@@ -13,24 +14,18 @@ all: $(NAME)
 obj/%.o: $(SRCS_DIR)%.c Makefile | obj
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(NAME): $(LIBFT_NAME) $(OBJ/OBJECTS)
-	$(CC) -o $(NAME) $^ $(CFLAGS) $(LIBFT_NAME)
-
-$(LIBFT_NAME):
-	$(MAKE) -C $(LIBFT_PATH) && cp -f $(LIBFT_PATH)/$(LIBFT_NAME) $(shell pwd)
+$(NAME): $(OBJ/OBJECTS)
+	$(CC) -o $(NAME) $^ $(CFLAGS)
 
 obj:
-	mkdir -p obj/utils
+	mkdir -p obj/$(UTILS_DIR)
 
 clean:
-	$(MAKE) clean -C $(LIBFT_PATH)
-	rm -f $(LIBFT_NAME)
 	rm -rf obj
 	rm -f .*.swp
 	rm -rf $(NAME).dSYM
 
 fclean: clean
-	$(MAKE) fclean -C $(LIBFT_PATH)
 	rm -f $(NAME)
 
 re: fclean all

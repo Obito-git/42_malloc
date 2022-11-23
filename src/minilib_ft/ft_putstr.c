@@ -1,19 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_toupper.c                                       :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amyroshn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 11:20:52 by amyroshn          #+#    #+#             */
-/*   Updated: 2021/11/23 11:21:10 by amyroshn         ###   ########.fr       */
+/*   Created: 2021/11/23 11:54:29 by amyroshn          #+#    #+#             */
+/*   Updated: 2021/11/23 11:54:59 by amyroshn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include "allocator.h"
 
-int	ft_toupper(int c)
+void	ft_putstr(char *s)
 {
-	if (c >= 'a' && c <= 'z')
-		return (c - 32);
-	return (c);
+	size_t	i;
+
+	i = 0;
+	if (!s)
+		return ;
+	while (s[i])
+		ft_putchar(s[i++]);
 }

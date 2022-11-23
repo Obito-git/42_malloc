@@ -9,11 +9,11 @@ void initialiseNewHeap(void *memory, size_t blockSize) {
 	t_heap *heap = (t_heap *) memory;
 	heap->block_count = 0;
 	heap->group = getBlockGroup(blockSize);
-	heap->free_size = getHeapSize(blockSize) - HEAP_HEADER_SIZE - HEADER_SIZE;
+	heap->free_size = getHeapAllocSize(blockSize) - HEAP_HEADER_SIZE - HEADER_SIZE;
 	t_header *firstBlock = FIRST_BLOCK(memory);
 	firstBlock->size = heap->free_size;
 	firstBlock->allocated = false;
-	heap->end = memory + getHeapSize(blockSize);
+	heap->end = memory + getHeapAllocSize(blockSize);
 }
 
 void *findAllocationRequiredHeap(size_t size) {
@@ -32,7 +32,7 @@ void *findAllocationRequiredHeap(size_t size) {
 			break;
 		heaps = heaps->next;
 	}
-	t_heap *new = mmap(NULL, getHeapSize(size), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+	t_heap *new = mmap(NULL, getHeapAllocSize(size), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
 	initialiseNewHeap(new, size);
 	heaps->next = new;
 	return new;

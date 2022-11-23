@@ -9,7 +9,6 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "../minilib_ft/includes/libft.h"
 
 #define TINY_ALLOC_SIZE 4 * getpagesize()
 #define TINY_BLOCK_MAX_SIZE TINY_ALLOC_SIZE / 128
@@ -18,19 +17,19 @@
 /*	Allocation macros */
 #define HEADER_SIZE sizeof(t_header)
 #define HEAP_HEADER_SIZE sizeof(t_heap)
-/* Heap macros */
+/*	Heap macros */
 #define HEAP_GROUP(mem) (((t_heap *) mem)->group)
 #define HEAP_BLOCKS_COUNT(mem) (((t_heap *) mem)->block_count)
 #define HEAP_FREE_SIZE(mem) (((t_heap *) mem)->free_size)
 #define HEAP_NEXT(mem) (((t_heap *) mem)->next)
 #define HEAP_END(mem) (((t_heap *) mem)->end)
-/* Memory block macros */
+/*	Memory block macros */
 #define IS_ALLOC(mem) (((t_header *) mem)->allocated)
 #define ALLOC_SIZE(mem) (((t_header *) mem)->size)
 #define BLOCK_CONTENT(mem) (mem + HEADER_SIZE)
 #define NEXT_HEADER(mem) ((void *) (((char *) mem) + HEADER_SIZE + ALLOC_SIZE(mem)))
 #define FIRST_BLOCK(mem) (t_header *) (mem + HEAP_HEADER_SIZE);
-
+/*	Utils */
 #define MEM_ADDRESS(mem) ((unsigned long) ((char *) mem))
 #define HEX_BASE "0123456789abcdef"
 
@@ -60,7 +59,7 @@ void *malloc(size_t size);
 void *realloc(void *ptr, size_t size);
 
 /*	Memory Groups */
-size_t getHeapSize(size_t size);
+size_t getHeapAllocSize(size_t size);
 t_group getHeapGroup(size_t size);
 t_group getBlockGroup(size_t size);
 
@@ -77,9 +76,13 @@ void deallocateHeap(void *heap);
 /* Print */
 void show_alloc_mem();
 
-
-
-//libft
-char	*ft_strcpy(char *dest, const char *src);
+/*	Libft */
+void	ft_putendl(char *s);
+void	ft_putstr(char *s);
+void	ft_putchar(char c);
+void	ft_putunsigned_base(unsigned long nbr, char *base);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+void	ft_putunsigned(unsigned long n);
+size_t	ft_strlen(const char *str);
 
 #endif //MALLOC_ALLOCATOR_H

@@ -1,17 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amyroshn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 11:15:04 by amyroshn          #+#    #+#             */
-/*   Updated: 2022/01/24 09:02:07 by amyroshn         ###   ########.fr       */
+/*   Created: 2021/08/05 16:09:55 by amyroshn          #+#    #+#             */
+/*   Updated: 2021/08/05 18:49:59 by amyroshn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include "allocator.h"
 
-bool	ft_isdigit(int c)
+size_t	ft_strlen(const char *str)
 {
-	return (c >= '0' && c <= '9');
+	int	length;
+
+	length = 0;
+	if (str)
+		while (str[length])
+			length++;
+	return (length);
 }

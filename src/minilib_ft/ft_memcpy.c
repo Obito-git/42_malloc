@@ -1,32 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_numblen.c                                       :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amyroshn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/24 09:06:50 by amyroshn          #+#    #+#             */
-/*   Updated: 2022/01/24 09:06:53 by amyroshn         ###   ########.fr       */
+/*   Created: 2021/11/23 10:56:13 by amyroshn          #+#    #+#             */
+/*   Updated: 2021/11/23 10:56:17 by amyroshn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include "allocator.h"
 
-size_t	ft_numblen(long numb)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t	i;
 
+	if (!dest && !src)
+		return (NULL);
 	i = 0;
-	if (numb == LONG_MIN)
-		return (20);
-	if (numb <= 0)
+	while (i < n)
 	{
-		numb *= -1;
+		((unsigned char *)dest)[i] = ((unsigned char *)src)[i];
 		i++;
 	}
-	while (numb > 0)
-	{
-		numb /= 10;
-		i++;
-	}
-	return (i);
+	return (dest);
 }
