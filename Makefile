@@ -2,19 +2,26 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
-NAME = libft_malloc_$(HOSTTYPE).so
+# Lib
 LIB_NAME = libft_malloc.so
+LIB_FLAGS = -shared
+
+#Variables
+NAME = libft_malloc_$(HOSTTYPE).so
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -g3 -Iinc -fPIC
-LIB_FLAGS = -shared
 SRCS_DIR = src/
 UTILS_DIR = minilib_ft/
-SRCS = allocator.c malloc.c memoryGroups.c heap.c memoryBlock.c print.c \
-	$(UTILS_DIR)ft_putchar.c $(UTILS_DIR)ft_putstr.c $(UTILS_DIR)ft_putendl.c $(UTILS_DIR)ft_putunsigned_base.c $(UTILS_DIR)ft_memcpy.c \
-	$(UTILS_DIR)ft_putunsigned.c $(UTILS_DIR)ft_strlen.c
+
+SRCS =	allocator.c malloc.c memoryGroups.c heap.c memoryBlock.c print.c \
+		$(UTILS_DIR)ft_putchar.c $(UTILS_DIR)ft_putstr.c $(UTILS_DIR)ft_putendl.c \
+		$(UTILS_DIR)ft_putunsigned_base.c $(UTILS_DIR)ft_memcpy.c \
+		$(UTILS_DIR)ft_putunsigned.c $(UTILS_DIR)ft_strlen.c
+		
 OBJ/OBJECTS		=	$(patsubst $(SRCS_DIR)%.c, obj/%.o, $(SRCS))
 SRCS	:= $(foreach file,$(SRCS),$(SRCS_DIR)$(file))
 
+#Rules
 all: $(NAME)
 	
 obj/%.o: $(SRCS_DIR)%.c Makefile | obj
@@ -31,7 +38,6 @@ obj:
 clean:
 	rm -rf obj
 	rm -f .*.swp
-	rm -rf $(NAME).dSYM
 
 fclean: clean
 	rm -f $(NAME) $(LIB_NAME)
