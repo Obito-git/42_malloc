@@ -1,21 +1,18 @@
-//
-// Created by Anton on 11/11/2022.
-//
-
 #include "allocator.h"
 
 t_heap *g_heap = NULL;
+pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static rlim_t getAllocLimit(void) {
+rlim_t getAllocLimit(void) {
 	struct rlimit rpl;
 
-	if (getrlimit(RLIMIT_DATA, &rpl) < 0)
-		return (-1);
+	if (getrlimit(RLIMIT_NOFILE, &rpl) != 0)
+		return (0);
 	return (rpl.rlim_max);
 }
 
 void *allocate(size_t size) {
-	if (!size || size > getAllocLimit())
+	if (!size || !getAllocLimit() || size > getAllocLimit())
 		return NULL;
 	t_heap *correct_heap = NULL;
 	if (!g_heap) {

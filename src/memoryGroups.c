@@ -1,6 +1,3 @@
-//
-// Created by Anton on 12/11/2022.
-//
 #include "allocator.h"
 
 /* @size is requested size of memory block */

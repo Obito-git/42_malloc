@@ -1,6 +1,3 @@
-//
-// Created by Anton on 12/11/2022.
-//
 #include "allocator.h"
 
 void *allocateBlock(void *heap, size_t size) {
@@ -52,7 +49,7 @@ void *reallocBlock(void *ptr, void *heap, size_t newSize) {
 	if (ALLOC_SIZE(ptrHeader) == newSize)
 		return ptr;
 	if (HEAP_GROUP(heap) != LARGE && !IS_ALLOC(nextHeader))
-		if (tryToExtendBlock(ptrHeader, nextHeader, newSize))
+		if (HEAP_GROUP(heap) == getBlockGroup(newSize) && tryToExtendBlock(ptrHeader, nextHeader, newSize))
 			return ptr;
 	void *res = malloc(newSize);
 	if (!res)
@@ -66,13 +63,12 @@ static void mergeFreedBlocks(void *prev, void *curr, void *heap) {
 	if (prev >= curr)
 		return;
 	ALLOC_SIZE(prev) = ALLOC_SIZE(prev) + HEADER_SIZE + ALLOC_SIZE(curr);
-	HEAP_BLOCKS_COUNT(heap)--;
 	if (NEXT_HEADER(prev) < HEAP_END(heap) && !IS_ALLOC(NEXT_HEADER(prev))) {
 		ALLOC_SIZE(prev) = ALLOC_SIZE(prev) + HEADER_SIZE + ALLOC_SIZE(NEXT_HEADER(prev));
-		HEAP_BLOCKS_COUNT(heap)--;
 	}
-	if (!HEAP_BLOCKS_COUNT(heap))
+	if (!HEAP_BLOCKS_COUNT(heap)) {
 		deallocateHeap(heap);
+	}
 }
 
 /*	Finds @ptr in @g_heap for set @heap, @prevBlock, @currBlock variables before free */
@@ -102,10 +98,11 @@ void deallocateBlock(void *ptr) {
 	HEAP_FREE_SIZE(heap) += ALLOC_SIZE(currBlock) + HEADER_SIZE;
 	IS_ALLOC(currBlock) = false;
 	HEAP_BLOCKS_COUNT(heap)--;
-	if (HEAP_GROUP(heap) == LARGE || !HEAP_BLOCKS_COUNT(heap))
+	if (HEAP_GROUP(heap) == LARGE || !HEAP_BLOCKS_COUNT(heap)) {
 		deallocateHeap(heap);
-	else if (prevBlock && !IS_ALLOC(prevBlock))
+	} else if (prevBlock && !IS_ALLOC(prevBlock)) {
 		mergeFreedBlocks(prevBlock, currBlock, heap);
-	else if (!IS_ALLOC(NEXT_HEADER(currBlock)) && ALLOC_SIZE(NEXT_HEADER(currBlock)))
+	} else if (!IS_ALLOC(NEXT_HEADER(currBlock)) && ALLOC_SIZE(NEXT_HEADER(currBlock))) {
 		mergeFreedBlocks(currBlock, NEXT_HEADER(currBlock), heap);
+	}
 }

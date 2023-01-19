@@ -1,6 +1,3 @@
-//
-// Created by Anton on 15/11/2022.
-//
 #include "allocator.h"
 
 static void show_heap_header(t_heap *heap, size_t heap_number) {
@@ -15,7 +12,7 @@ static void show_heap_header(t_heap *heap, size_t heap_number) {
 		ft_putstr("LARGE");
 	ft_putstr(", mem start: 0x");
 	ft_putunsigned_base(MEM_ADDRESS(heap), HEX_BASE);
-	ft_putstr(", mem end: ");
+	ft_putstr(", mem end: 0x");
 	ft_putunsigned_base(MEM_ADDRESS(heap->end), HEX_BASE);
 	ft_putstr(", blocks number: ");
 	ft_putunsigned(heap->block_count);
@@ -69,6 +66,14 @@ void show_alloc_mem() {
 		ft_putendl("No memory allocated");
 		return;
 	}
+	ft_putstr("\nTINY BLOCK MAX_SIZE = ");
+	ft_putunsigned(TINY_BLOCK_MAX_SIZE);
+	ft_putstr(", SMALL BLOCK MAX SIZE = ");
+	ft_putunsigned(SMALL_BLOCK_MAX_SIZE);
+	ft_putstr(", LARGE BLOCK IS ALL BIGGER THAN SMALL BLOCK MAX SIZE\n");
+	ft_putstr("MAX MEM LIMIT = ");
+	ft_putnbr(getAllocLimit());
+	ft_putendl("\n");
 	show_group_mem(TINY);
 	show_group_mem(SMALL);
 	show_group_mem(LARGE);
