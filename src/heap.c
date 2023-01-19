@@ -40,8 +40,12 @@ void *findDeallocationRequiredHeap(void *ptr) {
 		return NULL;
 	void *tmp_glob = g_heap;
 	while (tmp_glob) {
-		if (ptr > tmp_glob && ptr < HEAP_END(tmp_glob))
-			return tmp_glob;
+		if (ptr > tmp_glob && ptr < HEAP_END(tmp_glob)) {
+            void *first_block = FIRST_BLOCK(tmp_glob);
+            while (BLOCK_CONTENT(first_block) < ptr)
+                first_block = NEXT_HEADER(first_block);
+            return ptr == BLOCK_CONTENT(first_block) ? tmp_glob : NULL;
+        }
 		tmp_glob = HEAP_NEXT(tmp_glob);
 	}
 	return NULL;

@@ -3,16 +3,8 @@
 t_heap *g_heap = NULL;
 pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-rlim_t getAllocLimit(void) {
-	struct rlimit rpl;
-
-	if (getrlimit(RLIMIT_NOFILE, &rpl) != 0)
-		return (0);
-	return (rpl.rlim_max);
-}
-
 void *allocate(size_t size) {
-	if (!size || !getAllocLimit() || size > getAllocLimit())
+	if (!size)
 		return NULL;
 	t_heap *correct_heap = NULL;
 	if (!g_heap) {
@@ -37,4 +29,7 @@ void deallocateHeap(void *heap) {
 		HEAP_NEXT(tmp) = HEAP_NEXT(heap);
 	}
 	munmap(heap, HEAP_FREE_SIZE(heap) + HEADER_SIZE + HEAP_HEADER_SIZE);
+    //2 times bcs it doesn't work instantly if called 1 time. can't find other solution
+    //if (!g_heap)
+    //    munmap(heap, HEAP_FREE_SIZE(heap) + HEADER_SIZE + HEAP_HEADER_SIZE);
 }

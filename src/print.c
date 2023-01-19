@@ -71,9 +71,6 @@ void show_alloc_mem() {
 	ft_putstr(", SMALL BLOCK MAX SIZE = ");
 	ft_putunsigned(SMALL_BLOCK_MAX_SIZE);
 	ft_putstr(", LARGE BLOCK IS ALL BIGGER THAN SMALL BLOCK MAX SIZE\n");
-	ft_putstr("MAX MEM LIMIT = ");
-	ft_putnbr(getAllocLimit());
-	ft_putendl("\n");
 	show_group_mem(TINY);
 	show_group_mem(SMALL);
 	show_group_mem(LARGE);

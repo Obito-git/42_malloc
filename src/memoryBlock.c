@@ -51,11 +51,15 @@ void *reallocBlock(void *ptr, void *heap, size_t newSize) {
 	if (HEAP_GROUP(heap) != LARGE && !IS_ALLOC(nextHeader))
 		if (HEAP_GROUP(heap) == getBlockGroup(newSize) && tryToExtendBlock(ptrHeader, nextHeader, newSize))
 			return ptr;
-	void *res = malloc(newSize);
-	if (!res)
+    pthread_mutex_unlock(&g_mutex);
+    void *res = malloc(newSize);
+    pthread_mutex_lock(&g_mutex);
+    if (!res)
 		return NULL;
 	ft_memcpy(res, ptr, ALLOC_SIZE(ptrHeader) < newSize ? ALLOC_SIZE(ptrHeader) : newSize);
+    pthread_mutex_unlock(&g_mutex);
 	free(ptr);
+    pthread_mutex_lock(&g_mutex);
 	return res;
 }
 
@@ -92,6 +96,8 @@ static void setDeallocBlocks(void *ptr, void **heap, void **prevBlock, void **cu
 void deallocateBlock(void *ptr) {
 	void *heap, *prevBlock, *currBlock;
 	heap = prevBlock = currBlock = NULL;
+    t_heap *test = g_heap;
+    (void) test;
 	setDeallocBlocks(ptr, &heap, &prevBlock, &currBlock);
 	if (!heap || currBlock >= HEAP_END(heap))
 		return;
